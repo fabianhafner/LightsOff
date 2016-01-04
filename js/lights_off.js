@@ -41,6 +41,7 @@ function start(accWindowLength, accMax) {
 		bgColours.push(paragraphs[i].style.backgroundColor);
 		textColours.push(paragraphs[i].style.color);
 		paragraphs[i].style.backgroundColor = "rgb(0,0,0)";　　　　
+		paragraphs[i].style.color = "rgb(0,0,0)";　　　　
     }
 	
 	// Set accelerometer event.
