@@ -55,6 +55,9 @@ function start(accWindowLength, accMax, fadeTime, fadeAmount) {
 		paragraphs[i].style.color = "rgb(0,0,0)";　　　　
     }
 	
+	// set current colour to black
+	currColour = 0;
+	
 	//set fade event
 	fadeTimer = setInterval(fadeRefresh, fadeTime);
 	
@@ -123,7 +126,9 @@ function stop() {
 function increaseColour(acc, accMax) {	
 	var scaledColour = Math.floor(acc/accMax * 255);
 	currColour += scaledColour;
-	if (currColour > 255) {
+	if (currColour < 0) {
+		currColour = 0;
+	} else if (currColour > 255) {
 		currColour = 255;
 	}
 	document.getElementById('debug').innerHTML = acc + "/" + accMax + " -> +" + scaledColour + " -- "+currColour+"<br>";
