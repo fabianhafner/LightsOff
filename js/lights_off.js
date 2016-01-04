@@ -33,7 +33,7 @@ function start(accWindowLength, accMax) {
 	storedAccMax = accMax;
 	
 	// Set debug text to "waiting" until enough values are collected. Will stay on this if no accelerometer is present on the device.
-	document.getElementById('debug').innerHTML = "Waiting for accelerometer values.";
+	document.getElementById('debug').innerHTML = "Waiting for accelerometer values." + accWindow.length;
 	
 	//Store original colours and set background colours to black
 	var paragraphs = document.getElementsByClassName("lightsOffText");
@@ -72,6 +72,7 @@ function start(accWindowLength, accMax) {
 		accWindow = [];
 			
 		// Set text colours.
+		document.getElementById('debug').innerHTML = avg + "<br>";
 		changeTextColours(avg, accMax);
 	}
 }
