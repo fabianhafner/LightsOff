@@ -32,9 +32,6 @@ function start(accWindowLength, accMax) {
 	storedAccWindowLentgh = accWindowLength;
 	storedAccMax = accMax;
 	
-	// Assume "standing" as default state.
-	userStanding();
-	
 	// Set debug text to "waiting" until enough values are collected. Will stay on this if no accelerometer is present on the device.
 	document.getElementById('debug').innerHTML = "Waiting for accelerometer values.";
 	
