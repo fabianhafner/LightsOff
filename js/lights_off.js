@@ -40,7 +40,7 @@ function start(accWindowLength, accMax) {
 	for (var i = 0; i < paragraphs.length; i++) {　　　　
 		bgColours.push(paragraphs[i].style.backgroundColor);
 		textColours.push(paragraphs[i].style.color);
-		paragraphs[i].style.backgroundColor = "#000000";　　　　
+		paragraphs[i].style.backgroundColor = "rgb(0,0,0)";　　　　
     }
 	
 	// Set accelerometer event.
@@ -103,14 +103,16 @@ function stop() {
 //acc: current acceleration
 //accMax: acceleration corresponding to white text
 function changeTextColours(acc, accMax) {
+	document.getElementById('debug').innerHTML = document.getElementById('debug').innerHTML + " changeColours";
 	
 	var scaledColour = 0;
 	if (acc > accMax) {
 		scaledColour = 255;
 	} else {
 		scaledColour = acc/accMax * 255;
+		scaledColour = Math.floor(scaledColour);
 	}
-	document.getElementById('debug').innerHTML = acc + "/" + accMAx + " -> " + scaledColour + "<br>";
+	document.getElementById('debug').innerHTML = acc + "/" + accMax + " -> " + scaledColour + "<br>";
 	var paragraphs = document.getElementsByClassName("lightsOffText");
 	for (var i = 0; i < paragraphs.length; i++) {　　　　
 		paragraphs[i].style.color = "rgb("+scaledColour+","+scaledColour+","+scaledColour+")";　　　
