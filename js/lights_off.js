@@ -100,7 +100,7 @@ function stop() {
 	
 	//Turn Stop button into Start button using the stored parameters
 	document.getElementById('startStop').innerHTML = "Start";
-	document.getElementById('startStop').setAttribute('onclick', 'start(' + storedAccWindowLentgh + ',' + storedAccMax + ');');
+	document.getElementById('startStop').setAttribute('onclick', 'start(' + storedAccWindowLentgh + ',' + storedAccMax + ',' + storedFadeTime + ',' + storedFadeAmount + ');');
 	
 	// Tell user library is inactive.
 	document.getElementById('debug').innerHTML = "Library turned off.";
