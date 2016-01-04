@@ -13,16 +13,25 @@ var debug = true;
 // Average of last X accelerometer values (X set by user in start()).
 var avg = 0;
 
-//Stored values used when start() is called for the first time
+// Stored values used when start() is called for the first time
 var storedAccWindowLength = 0;
 var storedAccMax = 0;
+var storedFadeAmount = 0;
+var storedFadeTime = 0;
+
+// Current text colour
+var currColour = 0;
+
+// The timer used for fade/refresh events
+var fadeTimer;
 
 // Start text lighting using accelerometer values. In elements marked with the class "lightsOffText", background colour is set to black and text colour is scaled from black to white based on current acceleration.
-// The parameters are: int accWindowLength, float accWindowThreshold, float smallFont, float bigFontSize
-//    accWindowLength: Number of accelerometer values to use for calculating an average. 100 can take between 0.5 and 3.5 seconds, depending on the device.
-//    accMax: The acceleration value corresponding to white text.
+// 	accWindowLength:	Number of accelerometer values to use for calculating an average. 100 can take between 0.5 and 3.5 seconds, depending on the device.
+// 	accMax:				The acceleration value corresponding to white text.
+//	fadeTime:   		The time between two colour fade/redraw events in milliseconds.
+//	fadeAmount:			The amount the colour is decreased each fade/refresh event in RGB values. (0 to 255)
 
-function start(accWindowLength, accMax) {
+function start(accWindowLength, accMax, fadeTime, fadeAmount) {
 	
 	//Turn Start button into Stop button
 	document.getElementById('startStop').innerHTML = "Stop";
@@ -31,11 +40,13 @@ function start(accWindowLength, accMax) {
 	//Store parameters
 	storedAccWindowLentgh = accWindowLength;
 	storedAccMax = accMax;
+	storedFadeAmount = fadeAmount;
+	storedFadeTime = fadeTime;
 	
 	// Set debug text to "waiting" until enough values are collected. Will stay on this if no accelerometer is present on the device.
 	document.getElementById('debug').innerHTML = "Waiting for accelerometer values." + accWindow.length;
 	
-	//Store original colours and set background colours to black
+	//Store original colours and set colours to black
 	var paragraphs = document.getElementsByClassName("lightsOffText");
 	for (var i = 0; i < paragraphs.length; i++) {　　　　
 		bgColours.push(paragraphs[i].style.backgroundColor);
@@ -43,6 +54,9 @@ function start(accWindowLength, accMax) {
 		paragraphs[i].style.backgroundColor = "rgb(0,0,0)";　　　　
 		paragraphs[i].style.color = "rgb(0,0,0)";　　　　
     }
+	
+	//set fade event
+	fadeTimer = setInterval(fadeRefresh, fadeTime);
 	
 	// Set accelerometer event.
 	window.ondevicemotion = function(event) { 
@@ -74,7 +88,7 @@ function start(accWindowLength, accMax) {
 			
 		// Set text colours.
 		document.getElementById('debug').innerHTML = avg + "<br>";
-		changeTextColours(avg, accMax);
+		increaseColour(avg, accMax);
 	}
 }
 
@@ -98,25 +112,32 @@ function stop() {
 	window.ondevicemotion = function(event) { 
 		// Do nothing on device motion.
 	}
+	
+	// Stop fade timer
+	clearInterval(fadeTimer);
 }
 
 //Scales text colours based on current acceleration
 //acc: current acceleration
 //accMax: acceleration corresponding to white text
-function changeTextColours(acc, accMax) {
-	document.getElementById('debug').innerHTML = document.getElementById('debug').innerHTML + " changeColours";
-	
-	var scaledColour = 0;
-	if (acc > accMax) {
-		scaledColour = 255;
-	} else {
-		scaledColour = acc/accMax * 255;
-		scaledColour = Math.floor(scaledColour);
+function increaseColour(acc, accMax) {	
+	var scaledColour = Math.floor(acc/accMax * 255);
+	currColour += scaledColour;
+	if (currColour > 255) {
+		currColour = 255;
 	}
-	document.getElementById('debug').innerHTML = acc + "/" + accMax + " -> " + scaledColour + "<br>";
+	document.getElementById('debug').innerHTML = acc + "/" + accMax + " -> +" + scaledColour + " -- "+currColour+"<br>";
+}
+
+// Used in timed fade event to let text colour fade over time
+function fadeRefresh() {
+	currColour -= storedFadeAmount;
+	if (currColour < 0) {
+		currColour = 0;
+	}
 	var paragraphs = document.getElementsByClassName("lightsOffText");
 	for (var i = 0; i < paragraphs.length; i++) {　　　　
-		paragraphs[i].style.color = "rgb("+scaledColour+","+scaledColour+","+scaledColour+")";　　　
+		paragraphs[i].style.color = "rgb("+currColour+","+currColour+","+currColour+")";　　　
     }
 }
 
