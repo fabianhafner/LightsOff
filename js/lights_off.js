@@ -34,7 +34,7 @@ var fadeTimer;
 function start(accWindowLength, accMax, fadeTime, fadeAmount) {
 	
 	//Turn Start button into Stop button
-	document.getElementById('startStop').innerHTML = "Stop";
+	document.getElementById('startStop').innerHTML = "Lights on";
 	document.getElementById('startStop').setAttribute('onclick','stop();');
 	
 	//Store parameters
@@ -99,7 +99,7 @@ function start(accWindowLength, accMax, fadeTime, fadeAmount) {
 function stop() {
 	
 	//Turn Stop button into Start button using the stored parameters
-	document.getElementById('startStop').innerHTML = "Start";
+	document.getElementById('startStop').innerHTML = "Lights off";
 	document.getElementById('startStop').setAttribute('onclick', 'start(' + storedAccWindowLentgh + ',' + storedAccMax + ',' + storedFadeTime + ',' + storedFadeAmount + ');');
 	
 	// Tell user library is inactive.
