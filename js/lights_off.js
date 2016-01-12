@@ -85,7 +85,7 @@ function start(accWindowLength, accMax, fadeTime, fadeAmount) {
 			ax = event.accelerationIncludingGravity.x;
 			ay = event.accelerationIncludingGravity.y;
 			az = event.accelerationIncludingGravity.z;	
-			accSum = Math.abs(ax) + Math.abs(ay) + Math.abs(az) - 13; //no "correct" compensation for gravity, but good enough for this purpose on my tested devices
+			accSum = Math.abs(ax) + Math.abs(ay) + Math.abs(az) - 9.81; //no "correct" compensation for gravity, but good enough for this purpose on my tested devices
 		}
 		if (ax == null || ay == null || az == null){
 			document.getElementById('debug1').innerHTML = "No accelerometer.";
