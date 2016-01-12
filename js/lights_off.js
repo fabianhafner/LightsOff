@@ -43,7 +43,7 @@ function start(accWindowLength, accMax, fadeTime, fadeAmount) {
 	storedFadeAmount = fadeAmount;
 	storedFadeTime = fadeTime;
 	
-	// Set debug text to "waiting" until enough values are collected. Will stay on this if no accelerometer is present on the device.
+	// Set debug text to "waiting" until enough values are collected.
 	document.getElementById('debug1').innerHTML = "Waiting for accelerometer values.";
 	
 	//Store original colours and set colours to black
@@ -88,7 +88,7 @@ function start(accWindowLength, accMax, fadeTime, fadeAmount) {
 			accSum = Math.abs(ax) + Math.abs(ay) + Math.abs(az) - 13; //no "correct" compensation for gravity, but good enough for this purpose on my tested devices
 		}
 		if (ax == null || ay == null || az == null){
-			document.getElementById('debug1').innerHTML = "Error reading accelerometer values.";
+			document.getElementById('debug1').innerHTML = "No accelerometer.";
 			return;
 		}
 		document.getElementById('debug3').innerHTML = ax + " " + ay + " " + az;
@@ -132,6 +132,7 @@ function stop() {
 	// Tell user library is inactive.
 	document.getElementById('debug2').innerHTML = "<span id=\"debug1\" class=\"debug\"></span>";
 	document.getElementById('debug1').innerHTML = "Library turned off. ";
+	document.getElementById('debug3').innerHTML = "";
 	
 	//Restore original colours
 	var paragraphs = document.getElementsByClassName("lightsOffText");
