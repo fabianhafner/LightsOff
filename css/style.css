@@ -1,6 +1,6 @@
 
 body {
-	font-size: 1.1em;
+	font-size: 1.0em;
 	margin: 40px;
 	padding: 20px;
 	background-color: #FFFFFF;
@@ -9,7 +9,7 @@ body {
 	text-align: center;
 }
 
-#debug {
+.debug {
 	color: #0000FF;
 }
 

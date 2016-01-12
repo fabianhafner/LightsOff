@@ -44,7 +44,7 @@ function start(accWindowLength, accMax, fadeTime, fadeAmount) {
 	storedFadeTime = fadeTime;
 	
 	// Set debug text to "waiting" until enough values are collected. Will stay on this if no accelerometer is present on the device.
-	document.getElementById('debug').innerHTML = "Waiting for accelerometer values." + accWindow.length;
+	document.getElementById('debug1').innerHTML = "Waiting for accelerometer values.";
 	
 	//Store original colours and set colours to black
 	var paragraphs = document.getElementsByClassName("lightsOffText");
@@ -61,17 +61,45 @@ function start(accWindowLength, accMax, fadeTime, fadeAmount) {
 	//set fade event
 	fadeTimer = setInterval(fadeRefresh, fadeTime);
 	
+	if(!window.DeviceMotionEvent){
+		document.getElementById('debug1').innerHTML = "No accelerometer."
+		return;
+	}
+	
 	// Set accelerometer event.
 	window.ondevicemotion = function(event) { 
 		// Calculate sum of (absolute) accelerometer x, y and z values.
-		var ax = event.acceleration.x
-		var ay = event.acceleration.y
-		var az = event.acceleration.z	
-		var accSum = Math.abs(ax) + Math.abs(ay) + Math.abs(az);
+		var ax = 0;
+		var ay = 0;
+		var az = 0;
+		var accSum;
 		
+		// Depending on whether the device can provide accelerometer values with or without gravity.
+		if (event.acceleration){
+			ax = event.acceleration.x;
+			ay = event.acceleration.y;
+			az = event.acceleration.z;	
+			accSum = Math.abs(ax) + Math.abs(ay) + Math.abs(az);
+		}
+		if (ax == null || ay == null || az == null){
+			ax = event.accelerationIncludingGravity.x;
+			ay = event.accelerationIncludingGravity.y;
+			az = event.accelerationIncludingGravity.z;	
+			accSum = Math.abs(ax) + Math.abs(ay) + Math.abs(az) - 13; //no "correct" compensation for gravity, but good enough for this purpose on my tested devices
+		}
+		if (ax == null || ay == null || az == null){
+			document.getElementById('debug1').innerHTML = "Error reading accelerometer values.";
+			return;
+		}
+		document.getElementById('debug3').innerHTML = ax + " " + ay + " " + az;
 		// Add sum to array and return if the number of collected values is too small.
 		accWindow.push(accSum);
 		if (accWindow.length < accWindowLength) {
+			var filler = "";
+			if (accWindow.length < 10) {
+				filler = "0"
+			}
+			document.getElementById('debug1').innerHTML = filler + "" + accWindow.length + "/" + accWindowLength + " values => ";
 			return;
 		}
 		
@@ -90,7 +118,6 @@ function start(accWindowLength, accMax, fadeTime, fadeAmount) {
 		accWindow = [];
 			
 		// Set text colours.
-		document.getElementById('debug').innerHTML = avg + "<br>";
 		increaseColour(avg, accMax);
 	}
 }
@@ -103,7 +130,8 @@ function stop() {
 	document.getElementById('startStop').setAttribute('onclick', 'start(' + storedAccWindowLentgh + ',' + storedAccMax + ',' + storedFadeTime + ',' + storedFadeAmount + ');');
 	
 	// Tell user library is inactive.
-	document.getElementById('debug').innerHTML = "Library turned off.";
+	document.getElementById('debug2').innerHTML = "<span id=\"debug1\" class=\"debug\"></span>";
+	document.getElementById('debug1').innerHTML = "Library turned off. ";
 	
 	//Restore original colours
 	var paragraphs = document.getElementsByClassName("lightsOffText");
@@ -131,7 +159,7 @@ function increaseColour(acc, accMax) {
 	} else if (currColour > 255) {
 		currColour = 255;
 	}
-	document.getElementById('debug').innerHTML = acc + "/" + accMax + " -> +" + scaledColour + " -- "+currColour+"<br>";
+	document.getElementById('debug2').innerHTML ="<span id=\"debug1\" class=\"debug\">"+document.getElementById('debug1').innerHTML+"</span>" + acc + "/" + accMax + " -> +" + scaledColour + " => "+currColour;
 }
 
 // Used in timed fade event to let text colour fade over time
@@ -151,9 +179,13 @@ function toggleDebug() {
 	debug = !debug;
 	
 	if (debug) {
-		document.getElementById('debug').style.visibility = 'visible';
+		// document.getElementById('debug1').style.visibility = 'visible';
+		document.getElementById('debug2').style.visibility = 'visible';
+		document.getElementById('debug3').style.visibility = 'visible';
 	} else {
-		document.getElementById('debug').style.visibility = 'hidden';
+		// document.getElementById('debug1').style.visibility = 'hidden';
+		document.getElementById('debug2').style.visibility = 'hidden';
+		document.getElementById('debug3').style.visibility = 'hidden';
 	}
 }
 
